@@ -17,10 +17,10 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: npm
+          
 
       - name: Install Node.js dependencies
-        run: npm ci
+        run: npm install
 
       - name: Run ESLint
         run: npm run lint
@@ -28,7 +28,6 @@ jobs:
   build-and-push:
     name: Build and push
     needs: run-linters
-    if: github.event_name == 'push'
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -46,7 +45,6 @@ jobs:
       - name: Build and push
         uses: docker/build-push-action@v6
         with:
-          context: .
           push: true
           tags: |
             ${{ vars.DOCKER_USERNAME }}/dev-fe-main:latest
