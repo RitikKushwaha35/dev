@@ -1,32 +1,30 @@
 name: CI
 
 on:
- push:
-   branches: [main]
+  push:
+    branches: [main]
 
 jobs:
-   build and push:
-       runs-on: ubuntu-latest
-       steps:
-       - name: ChcekOut code 
-         uses: actions/checkout@v7
+  build-and-push:
+    name: Build and push
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
 
-       - name: Docker Hub login
-         uses: docker/login-action@v4
-         with:
-           username: ${{vars.DOCKER_USERNAME}}
-           password: ${{secrets.DOCKER_TOKEN}}
+      - name: Docker Hub login
+        uses: docker/login-action@v3
+        with:
+          username: ${{ vars.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_TOKEN }}
 
-       - name: Build Docker Setup
-         uses: docker/setup-buildx-action@v4
+      - name: Buildx setup
+        uses: docker/setup-buildx-action@v3
 
-       - name: Build and push
-         uses: docker/build-push-action@v7  
-         with:
-           
-
-           
-
-    
-      
-     
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          push: true
+          tags: |
+            ${{ vars.DOCKER_USERNAME }}/dev-fe-main:latest
+            ${{ vars.DOCKER_USERNAME }}/dev-fe-main:${{ github.sha }}
